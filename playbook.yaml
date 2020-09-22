@@ -1,0 +1,37 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  become: true
+  vars:
+    service: nginx
+    repo: "https://github.com/keenan218/chaperootodo_client"
+    install_directory: "/opt/website"
+  tasks:
+  - name: "install git"
+    apt: 
+      name: git
+      update_cache: true
+  - name: "download: {{ repo }}"
+    git: 
+      repo: "{{ repo }}"
+      dest: "{{ install_directory }}"
+      force: yes
+  - name: "nginx installed"
+    apt:
+      name: nginx
+      state: latest
+      update_cache: true
+  - name: "nginx started"
+    service:
+      name: nginx
+      state: started
+  - name: "install nginx config"
+    template:
+      src: "./nginx.conf"
+      dest: "/etc/nginx/nginx.conf"
+    register: nginx_config
+  - name: "reload nginx"
+    systemd:
+      name: nginx
+      state: reloaded
+    when: nginx_config.changed
