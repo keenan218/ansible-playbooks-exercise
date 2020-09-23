@@ -4,7 +4,7 @@
   become: true
   vars:
     service: nginx
-    repo: "https://github.com/keenan218/chaperootodo_client"
+    repo: "https://gitlab.com/qacdevops/static-website-example"
     install_directory: "/opt/website"
   tasks:
   - name: "install git"
